@@ -10,10 +10,10 @@ public class ParseCmd {
     Map<String,String> param = new HashMap<>();
 
     public ParseCmd(String cmd) {
-        this.prefix = cmd;
+        this.rawCmd = cmd;
 
         String[] cmdParts = cmd.split("\\?");
-        rawCmd = cmdParts[0].trim();
+        prefix = cmdParts[0].trim();
         suffix = cmdParts.length > 1 ? cmdParts[1].trim() : "";
 
         String[] query = suffix.split("&");

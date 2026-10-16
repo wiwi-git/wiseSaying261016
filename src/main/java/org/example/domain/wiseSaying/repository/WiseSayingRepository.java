@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WiseSayingRepository {
-    private final String basePath = System.getProperty("user.dir") + "/db/wiseSaying/";
+    public final String basePath = System.getProperty("user.dir") + "/db/wiseSaying/";
 
     private void writeFileForm(String filename, WiseSaying form) throws IOException {
         File folder = new File(basePath);
