@@ -52,17 +52,20 @@ public class ParseCmd {
                 return command;
             case "빌드":
                 return Command.BUILD;
-            case "검색":
-                return Command.SEARCH;
             default:
                 return command;
         }
     }
 
+    /**
+     * 없는 키값일 경우 빈 문자열을 반환
+     * @param {string} key
+     * @return {string}
+     */
     public String getParam(String key) {
         String value = "";
         try {
-            value = param.get(key);
+            value = param.getOrDefault(key, "");
         } catch (Exception e) {
             System.out.println(e);
         }

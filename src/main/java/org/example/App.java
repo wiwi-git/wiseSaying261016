@@ -22,7 +22,12 @@ public class App {
                     wsController.register();
                     break;
                 case LIST:
-                    wsController.printList();
+                    String keyword = cmd.getParam("keyword").trim();
+                    if (keyword.isEmpty()) wsController.printList();
+                    else {
+                        KeywordType type = KeywordType.create(cmd.getParam("keywordType").trim());
+                        wsController.search(type, keyword);
+                    }
                     break;
                 case DELETE:
                     wsController.delete(parseId(cmd.getParam("id").trim()));
@@ -33,11 +38,11 @@ public class App {
                 case BUILD:
                     wsController.build();
                     break;
-                case SEARCH:
-                    KeywordType type = KeywordType.create(cmd.getParam("keywordType").trim());
-                    String keyword = cmd.getParam("keyword").trim();
-                    wsController.search(type, keyword);
-                    break;
+//                case SEARCH:
+//                    KeywordType type = KeywordType.create(cmd.getParam("keywordType").trim());
+//                    String keyword = cmd.getParam("keyword").trim();
+//                    wsController.search(type, keyword);
+//                    break;
                 case ERROR:
                     break;
             }
