@@ -83,7 +83,7 @@ class WiseSayingControllerTest {
         String cmd = sc.nextLine();
         ParseCmd parse = new ParseCmd(cmd);
 
-        int id = parse.getCommand().id;
+        int id = Integer.parseInt(parse.getParam("id"));
 
         wsController.delete(id);
         wsController.delete(id);
@@ -117,13 +117,13 @@ class WiseSayingControllerTest {
         //-- 수정1
         String cmd = sc.nextLine();
         ParseCmd parse = new ParseCmd(cmd);
-        int id = parse.getCommand().id;
+        int id = Integer.parseInt(parse.getParam("id"));
         wsController.update(id);
 
         //-- 수정 실패
         cmd = sc.nextLine();
         parse = new ParseCmd(cmd);
-        id = parse.getCommand().id;
+        id = Integer.parseInt(parse.getParam("id"));
         wsController.update(id);
 
         TestUtil.clearSetOutToByteArray();

@@ -1,13 +1,11 @@
 package org.example.domain.wiseSaying.repository;
 
+import org.example.KeywordType;
 import org.example.domain.wiseSaying.entity.WiseSaying;
 
 import java.io.*;
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class WiseSayingRepository {
     public final String basePath = System.getProperty("user.dir") + "/db/wiseSaying/";
@@ -26,7 +24,7 @@ public class WiseSayingRepository {
 
         FileWriter fw = new FileWriter(basePath + filename);
         PrintWriter pw = new PrintWriter(fw);
-        pw.println(form.toString());
+        pw.println(form.toJson());
 
         fw.close();
         pw.close();
@@ -107,10 +105,11 @@ public class WiseSayingRepository {
     }
 
     private WiseSaying readFileForm(File file) throws IOException{
-        StringBuilder result = new StringBuilder();
+//        StringBuilder result = new StringBuilder();
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
 
+        /*
         String line = "";
         while ((line = br.readLine()) != null) {
             result.append(line);
@@ -126,6 +125,41 @@ public class WiseSayingRepository {
 
         int id = Integer.parseInt(splited[0].trim());
         WiseSaying form = new WiseSaying(id, splited[1].trim(), splited[2].trim());
+         */
+
+        // TODO: 언제 한번 text to json 하는거 제대로 만들어봐도 좋을듯?
+        String line = "";
+        WiseSaying form = new WiseSaying(-1);
+
+        while ((line = br.readLine()) != null) {
+            String str = line.trim();
+            if (str.startsWith("\"")) {
+                if (str.endsWith(",")) str = str.substring(0, str.length() - 1);
+
+                String[] keyAndValue = str.split(":");
+                if (keyAndValue.length != 2) {
+                    System.out.printf("json파싱중에 예상치 못한 상황이 발생했다! line: %s%n", str);
+                    continue;
+                }
+                String key = keyAndValue[0].replace("\"",  "").trim();
+                String value = keyAndValue[1].replace("\"",  "").trim();
+
+                switch (key) {
+                    case "id" :
+                        // TODO: 항상 parseInt 가 걱정되네 safe버전을 만들어놔야하는데
+                        form.setId(Integer.parseInt(value));
+                        break;
+                    case "content":
+                        form.setText(value);
+                        break;
+                    case "author":
+                        form.setAuth(value);
+                        break;
+                    default: break;
+                }
+            }
+        }
+
 
         fr.close();
         br.close();
@@ -194,5 +228,39 @@ public class WiseSayingRepository {
                 file.delete();
             }// for
         }// files not null
+    }
+
+    public List<WiseSaying> search(KeywordType type, String keyword) throws IOException{
+        File folder = new File(basePath);
+        File[] files = folder.listFiles();
+
+        List<WiseSaying> result = new ArrayList<>();
+
+        if (files == null) return result;
+
+        for (File file : files) {
+            if (!file.isFile() || !file.getName().endsWith(".json")) {
+                continue;
+            }
+            if (file.getName().startsWith("data")) {
+                continue;
+            }
+
+            WiseSaying form = readFileForm(file);
+            switch (type) {
+                case KeywordType.AUTHOR:
+                    if (form.getAuth().contains(keyword)) {
+                        result.add(form);
+                    }
+
+                    break;
+                case KeywordType.CONTENT:
+                    if (form.getText().contains(keyword)) {
+                        result.add(form);
+                    }
+            }
+        }// for
+
+        return result;
     }
 }

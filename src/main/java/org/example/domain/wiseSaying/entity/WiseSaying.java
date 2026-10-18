@@ -43,12 +43,13 @@ public class WiseSaying {
         return  id + " / " + auth + " / " + text;
     }
 
-//    public String toJson() {
-//        return """
-//{
-//    "id": %d,
-//    "content": "%s",
-//    "author": "%s"
-//}""".formatted(id, text, auth);
-//    }
+    public String toJson() {
+        return """
+            {
+                "id": %d,
+                "content": "%s",
+                "author": "%s"
+            }
+            """.formatted(id, text, auth);
+    }
 }

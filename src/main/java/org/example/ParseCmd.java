@@ -44,20 +44,28 @@ public class ParseCmd {
                 return Command.LIST;
             case "삭제":
                 command = Command.DELETE;
-                command.id = Integer.parseInt(param.get("id"));
+//                command.id = Integer.parseInt(param.get("id"));
                 return command;
             case "수정":
                 command = Command.UPDATE;
-                command.id = Integer.parseInt(param.get("id"));
+//                command.id = Integer.parseInt(param.get("id"));
                 return command;
             case "빌드":
                 return Command.BUILD;
+            case "검색":
+                return Command.SEARCH;
             default:
-                return Command.ERROR;
+                return command;
         }
     }
 
     public String getParam(String key) {
-        return param.get(key);
+        String value = "";
+        try {
+            value = param.get(key);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return  value;
     }
 }

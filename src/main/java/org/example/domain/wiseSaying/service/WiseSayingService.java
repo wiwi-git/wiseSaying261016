@@ -1,9 +1,11 @@
 package org.example.domain.wiseSaying.service;
 
+import org.example.KeywordType;
 import org.example.domain.wiseSaying.entity.WiseSaying;
 import org.example.domain.wiseSaying.repository.WiseSayingRepository;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class WiseSayingService {
@@ -76,5 +78,14 @@ public class WiseSayingService {
 
     public void allClear() {
         wsRepository.allClear();
+    }
+
+    public List<WiseSaying> search(KeywordType type, String keyword) {
+        try {
+            return wsRepository.search(type, keyword);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+//        return new WiseSaying[]{};
     }
 }

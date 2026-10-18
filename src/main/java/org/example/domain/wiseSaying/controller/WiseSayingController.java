@@ -1,8 +1,10 @@
 package org.example.domain.wiseSaying.controller;
 
+import org.example.KeywordType;
 import org.example.domain.wiseSaying.entity.WiseSaying;
 import org.example.domain.wiseSaying.service.WiseSayingService;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class WiseSayingController {
@@ -78,4 +80,23 @@ public class WiseSayingController {
     public void allClear() {
         wsService.allClear();
     }
+
+    public void search(KeywordType type, String keyword) {
+        List<WiseSaying> result = wsService.search(type, keyword);
+
+        System.out.println("""
+                ----------------------
+                검색타입 : %s
+                검색어 : %s
+                ----------------------
+                번호 / 작가 / 명언
+                ----------------------
+                """.formatted(type.toString().toLowerCase(), keyword)
+        );
+
+        for(WiseSaying w : result) {
+            System.out.println(w.toString());
+        }
+    }
 }
+

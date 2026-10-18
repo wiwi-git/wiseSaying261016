@@ -14,8 +14,8 @@ public class App {
 
         while (true) {
             System.out.print("명령) ");
-            Command command = sysController.getCommand();
-            switch (command) {
+            ParseCmd cmd = sysController.getCommand();
+            switch (cmd.getCommand()) {
                 case EXIT:
                     return;
                 case REGISTER:
@@ -25,20 +25,36 @@ public class App {
                     wsController.printList();
                     break;
                 case DELETE:
-                    wsController.delete(command.id);
+                    wsController.delete(parseId(cmd.getParam("id").trim()));
                     break;
                 case UPDATE:
-                    wsController.update(command.id);
+                    wsController.update(parseId(cmd.getParam("id").trim()));
                     break;
                 case BUILD:
                     wsController.build();
                     break;
-//                case ALL_CLEAR:
-//                    wsController.allClear();
-//                    break;
+                case SEARCH:
+                    KeywordType type = KeywordType.create(cmd.getParam("keywordType").trim());
+                    String keyword = cmd.getParam("keyword").trim();
+                    wsController.search(type, keyword);
+                    break;
                 case ERROR:
                     break;
             }
         } //while
+
+    }
+
+    static int parseId(String rawId) {
+        int id = -1;
+        if (rawId.isEmpty()) return id;
+
+        try {
+            id = Integer.parseInt(rawId);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+
+        return id;
     }
 }
